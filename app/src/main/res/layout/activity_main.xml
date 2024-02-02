@@ -2,41 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
+    android:orientation="vertical">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/one"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:text="1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/two"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+
         android:text="2" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/three"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+
         android:text="3" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/four"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+
+        android:text="4" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/all"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+
         android:text="all" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/connect"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:text="connect" />
+
 </LinearLayout>

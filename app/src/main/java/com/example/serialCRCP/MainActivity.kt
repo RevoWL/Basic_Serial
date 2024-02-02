@@ -33,19 +33,23 @@ class MainActivity : AppCompatActivity(), SerialInputOutputManager.Listener {
     private fun initList() {
 
         binding.one.setOnClickListener {
-            ArduinoSerial.port?.write("1\n".toByteArray(Charsets.UTF_8), 0)
+            ArduinoSerial.port?.write("Gello + 1\n".toByteArray(Charsets.UTF_8), 0)
 
         }
         binding.two.setOnClickListener {
-            ArduinoSerial.port?.write("2\n".toByteArray(Charsets.UTF_8), 0)
+            ArduinoSerial.port?.write("Deny + 2\n".toByteArray(Charsets.UTF_8), 0)
 
         }
         binding.three.setOnClickListener {
-            ArduinoSerial.port?.write("3\n".toByteArray(Charsets.UTF_8), 0)
+            ArduinoSerial.port?.write("gantry + 3\n".toByteArray(Charsets.UTF_8), 0)
+
+        }
+        binding.four.setOnClickListener {
+            ArduinoSerial.port?.write("ALL + 10\n".toByteArray(Charsets.UTF_8), 0)
 
         }
         binding.all.setOnClickListener {
-            ArduinoSerial.port?.write("4\n".toByteArray(Charsets.UTF_8), 0)
+            ArduinoSerial.port?.write("define + 11\n".toByteArray(Charsets.UTF_8), 0)
 
         }
         binding.connect.setOnClickListener {
@@ -78,15 +82,15 @@ class MainActivity : AppCompatActivity(), SerialInputOutputManager.Listener {
     }
 
     override fun onNewData(data: ByteArray?) {
-        Toast.makeText(this, "new data", Toast.LENGTH_SHORT).show()
-        handler?.post { receive(data) }
+//        println("new Data")
+//        handler?.post { receive(data) }
     }
 
     private fun receive(data: ByteArray?) {
-        Toast.makeText(this, String(data!!), Toast.LENGTH_SHORT).show()
+//        println(String(data!!))
     }
 
     override fun onRunError(e: Exception?) {
-        Toast.makeText(this, e?.message, Toast.LENGTH_SHORT).show()
+//        println(e?.message)
     }
 }
