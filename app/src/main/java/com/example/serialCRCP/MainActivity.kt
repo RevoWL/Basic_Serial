@@ -61,6 +61,25 @@ class MainActivity : AppCompatActivity(), SerialInputOutputManager.Listener {
             ArduinoSerial.port?.write("E - 1\n".toByteArray(Charsets.UTF_8), 0)
         }
 
+        binding.ledOne.setOnClickListener {
+            ArduinoSerial.port?.write("Light 1\n".toByteArray(Charsets.UTF_8), 0)
+        }
+        binding.ledTwo.setOnClickListener {
+            ArduinoSerial.port?.write("Light 2\n".toByteArray(Charsets.UTF_8), 0)
+        }
+
+        binding.motorMode.setOnClickListener {
+            ArduinoSerial.port?.write("1\n".toByteArray(Charsets.UTF_8), 0)
+            binding.ledModeCommand.visibility = View.GONE
+            binding.motorModeCommand.visibility = View.VISIBLE
+        }
+
+        binding.ledMode.setOnClickListener {
+            ArduinoSerial.port?.write("2\n".toByteArray(Charsets.UTF_8), 0)
+            binding.ledModeCommand.visibility = View.VISIBLE
+            binding.motorModeCommand.visibility = View.GONE
+        }
+
         binding.stop.setOnClickListener {
             ArduinoSerial.port?.write("S + 1\n".toByteArray(Charsets.UTF_8), 0)
         }
