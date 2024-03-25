@@ -3,6 +3,7 @@ package com.example.serialCRCP
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.serialCRCP.databinding.ActivityMainBinding
@@ -32,29 +33,40 @@ class MainActivity : AppCompatActivity(), SerialInputOutputManager.Listener {
 
     private fun initList() {
 
-        binding.one.setOnClickListener {
-            ArduinoSerial.port?.write("Gello + 1\n".toByteArray(Charsets.UTF_8), 0)
-
+        binding.xp.setOnClickListener {
+            ArduinoSerial.port?.write("X + 1\n".toByteArray(Charsets.UTF_8), 0)
         }
-        binding.two.setOnClickListener {
-            ArduinoSerial.port?.write("Deny + 2\n".toByteArray(Charsets.UTF_8), 0)
-
+        binding.xn.setOnClickListener {
+            ArduinoSerial.port?.write("X - 1\n".toByteArray(Charsets.UTF_8), 0)
         }
-        binding.three.setOnClickListener {
-            ArduinoSerial.port?.write("gantry + 3\n".toByteArray(Charsets.UTF_8), 0)
 
+        binding.yp.setOnClickListener {
+            ArduinoSerial.port?.write("Y + 1\n".toByteArray(Charsets.UTF_8), 0)
         }
-        binding.four.setOnClickListener {
-            ArduinoSerial.port?.write("ALL + 10\n".toByteArray(Charsets.UTF_8), 0)
+        binding.yn.setOnClickListener {
+            ArduinoSerial.port?.write("Y - 1\n".toByteArray(Charsets.UTF_8), 0)
+        }
 
+        binding.zp.setOnClickListener {
+            ArduinoSerial.port?.write("Z + 1\n".toByteArray(Charsets.UTF_8), 0)
         }
-        binding.all.setOnClickListener {
-            ArduinoSerial.port?.write("define + 11\n".toByteArray(Charsets.UTF_8), 0)
+        binding.zn.setOnClickListener {
+            ArduinoSerial.port?.write("Z - 1\n".toByteArray(Charsets.UTF_8), 0)
+        }
 
+        binding.ep.setOnClickListener {
+            ArduinoSerial.port?.write("E + 1\n".toByteArray(Charsets.UTF_8), 0)
         }
+        binding.en.setOnClickListener {
+            ArduinoSerial.port?.write("E - 1\n".toByteArray(Charsets.UTF_8), 0)
+        }
+
+        binding.stop.setOnClickListener {
+            ArduinoSerial.port?.write("S + 1\n".toByteArray(Charsets.UTF_8), 0)
+        }
+
         binding.connect.setOnClickListener {
             connectSerial()
-
         }
 
     }
@@ -72,7 +84,7 @@ class MainActivity : AppCompatActivity(), SerialInputOutputManager.Listener {
         }
     }
 
-    fun setupSerial() {
+    private fun setupSerial() {
         if (ArduinoSerial.port != null) {
             port = ArduinoSerial.port
             usbIoManager = SerialInputOutputManager(port, this@MainActivity)
@@ -82,12 +94,12 @@ class MainActivity : AppCompatActivity(), SerialInputOutputManager.Listener {
     }
 
     override fun onNewData(data: ByteArray?) {
-//        println("new Data")
-//        handler?.post { receive(data) }
+        println("new Data")
+        handler?.post { receive(data) }
     }
 
     private fun receive(data: ByteArray?) {
-//        println(String(data!!))
+        binding.current.text = String(data!!)
     }
 
     override fun onRunError(e: Exception?) {
