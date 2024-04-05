@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.serialCRCP"
-        minSdk = 24
+        minSdk = 30
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -52,5 +52,5 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 //    implementation("com.github.jiangdongguo.AndroidUSBCamera:libausbc:3.3.3")
-    implementation("com.github.RevoWL:AndroidUSBCamera:-SNAPSHOT")
+    implementation("com.github.RevoWL.AndroidUSBCamera:libausbc:-SNAPSHOT")
 }

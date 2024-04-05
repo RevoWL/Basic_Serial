@@ -32,7 +32,7 @@ class AnteriorEyeRecordingActivity : CameraActivity() {
 
     private lateinit var binding: ActivityAnteriorRecordingBinding
 
-    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+    private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
 
     override fun getCameraView(): IAspectRatio? {
@@ -111,7 +111,7 @@ class AnteriorEyeRecordingActivity : CameraActivity() {
                 override fun onError(error: String?) {
                 }
 
-            }, "$path/MyAPP/something"
+            }, "$path/MyAPP/something2.png"
         )
 
     }
