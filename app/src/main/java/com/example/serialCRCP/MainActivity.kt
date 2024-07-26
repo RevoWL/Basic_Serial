@@ -79,7 +79,6 @@ class MainActivity : AppCompatActivity(), SerialInputOutputManager.Listener {
             binding.ledModeCommand.visibility = View.VISIBLE
             binding.motorModeCommand.visibility = View.GONE
         }
-
         binding.stop.setOnClickListener {
             ArduinoSerial.port?.write("S + 1\n".toByteArray(Charsets.UTF_8), 0)
         }
@@ -123,5 +122,9 @@ class MainActivity : AppCompatActivity(), SerialInputOutputManager.Listener {
 
     override fun onRunError(e: Exception?) {
 //        println(e?.message)
+    }
+
+    private fun secialFunc() {
+       print("this is a special function that only exist in test1")
     }
 }
