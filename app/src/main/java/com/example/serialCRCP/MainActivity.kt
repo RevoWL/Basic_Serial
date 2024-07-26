@@ -125,6 +125,8 @@ class MainActivity : AppCompatActivity(), SerialInputOutputManager.Listener {
     }
 
     private fun secialFunc() {
-       print("this is a special function that only exist in test1")
+        print("this is a special function that only exist in test1")
+    }    private fun secialFunc2() {
+        print("this is a special function that only exist in test1")
     }
 }
