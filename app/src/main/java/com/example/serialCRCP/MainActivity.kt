@@ -2,18 +2,14 @@ package com.example.serialCRCP
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.le.ScanResult
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Build.VERSION
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.serialCRCP.databinding.ActivityMainBinding
 import java.util.UUID
 
@@ -21,8 +17,10 @@ import java.util.UUID
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    val BLEinstance = BLEConnection.getInstance()
 
-    private val Permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+    private val Permission = if (VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         arrayOf(
             Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -68,29 +66,15 @@ class MainActivity : AppCompatActivity() {
 
         if (grantResults.sum() == 0) {
             init()
-        } else {
-            Toast.makeText(this, "Require permission granting", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     @SuppressLint("MissingPermission", "NewApi")
     private fun init() {
 
-        val BLEinstance = BLEConnection.getInstance()
         BLEinstance.init_BLE(this)
-        val BLEAdapter = bleDeviceListAdapter()
-
-        binding.deviceRecyclerList.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this@MainActivity) // Use appropriate context
-            adapter = BLEAdapter // Ensure the adapter is set
-        }
 
         BLEinstance.setDeviceScanListener(object : BLEConnection.DeviceScanListener {
-            override fun onScanResultsAvailable(scanResult: ScanResult?) {
-                BLEAdapter.updateDeviceList(scanResult)
-            }
 
             override fun onBLEConnected(connected: Boolean) {
                 runOnUiThread {
@@ -110,33 +94,83 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        binding.scanBtn.setOnClickListener {
-            BLEinstance.scanLeDevice()
-            BLEAdapter.clearList()
+        binding.connect.setOnClickListener{
+            BLEinstance.scanLeDevice(this@MainActivity)
         }
 
-        binding.send0.setOnClickListener {
-            BLEinstance.BLEGatt?.writeCharacteristic(
-                BLEinstance.BLEGatt!!.getService(
-                    UUID.fromString(
-                        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-                    )
-                ).getCharacteristic(UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a8")),
-                "0".toByteArray(),
-                BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-            )
+
+        binding.XMinus.setOnClickListener {
+            sendValue("X - 1")
         }
 
-        binding.send1.setOnClickListener {
-            BLEinstance.BLEGatt?.writeCharacteristic(
-                BLEinstance.BLEGatt!!.getService(
-                    UUID.fromString(
-                        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-                    )
-                ).getCharacteristic(UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a8")),
-                "1".toByteArray(),
-                BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-            )
+        binding.XPlus.setOnClickListener {
+            sendValue("X + 1")
+        }
+
+        binding.YMinus.setOnClickListener {
+            sendValue("Y - 1")
+        }
+
+        binding.YPlus.setOnClickListener {
+            sendValue("Y + 1")
+        }
+
+        binding.ZMinus.setOnClickListener {
+            sendValue("Z - 1")
+        }
+
+        binding.ZPlus.setOnClickListener {
+            sendValue("Z + 1")
+        }
+
+        binding.LED1.setOnClickListener {
+            sendValue("Light 1")
+        }
+
+        binding.LED2.setOnClickListener {
+            sendValue("Light 2")
+        }
+
+        binding.LED3.setOnClickListener {
+            sendValue("Light 3")
+        }
+
+        binding.LED4.setOnClickListener {
+            sendValue("Light 4")
+        }
+
+        binding.LED5.setOnClickListener {
+            sendValue("Light 5")
+        }
+
+        binding.LED6.setOnClickListener {
+            sendValue("Light 6")
+        }
+
+    }
+
+    @SuppressLint("MissingPermission", "NewApi")
+    fun sendValue(value: String) {
+        try {
+            val characteristic = BLEinstance.BLEGatt!!.getService(
+                UUID.fromString(
+                    "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+                )
+            ).getCharacteristic(UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a8"))
+            if (VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                characteristic.value = value.toByteArray()
+                BLEinstance.BLEGatt?.writeCharacteristic(characteristic)
+
+            } else {
+                BLEinstance.BLEGatt?.writeCharacteristic(
+                    characteristic,
+                    value.toByteArray(),
+                    BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                )
+            }
+        } catch (e: NullPointerException) {
+            Toast.makeText(this@MainActivity, "No characteristic found", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 }

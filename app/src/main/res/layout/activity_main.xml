@@ -9,50 +9,193 @@
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.1">
+        android:layout_marginVertical="5dp"
+        android:layout_weight="0.15">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/scan_btn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="5dp"
-            android:layout_weight="0.15"
-            android:backgroundTint="#FF5D2C"
-            android:text="Scan Device" />
-
-
-    </TableRow>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/device_recycler_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.8" />
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.1">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/send_0"
+            android:id="@+id/X_Minus"
+            style="@style/ButtonBaseStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="0.15"
             android:backgroundTint="#2C41FF"
-            android:text="Send 0" />
+            android:text="-" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:gravity="center"
+            android:text="Motor X"
+            android:textSize="20sp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/send_1"
+            android:id="@+id/X_Plus"
+            style="@style/ButtonBaseStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="5dp"
             android:layout_weight="0.15"
             android:backgroundTint="#6A71FF"
-            android:text="Send 1" />
+            android:text="+" />
 
     </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="0.15">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/Y_Minus"
+            style="@style/ButtonBaseStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#2C41FF"
+            android:text="-" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:gravity="center"
+            android:text="Motor Y"
+            android:textSize="20sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/Y_Plus"
+            style="@style/ButtonBaseStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#6A71FF"
+            android:text="+" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="5dp"
+        android:layout_weight="0.15">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/Z_Minus"
+            style="@style/ButtonBaseStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#2C41FF"
+            android:text="-" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.15"
+            android:gravity="center"
+            android:text="Motor Z"
+            android:textSize="20sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/Z_Plus"
+            style="@style/ButtonBaseStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#6A71FF"
+            android:text="+" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.15">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/LED_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#FFAA00"
+            android:text="LED 1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/LED_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#C9FF7700"
+            android:text="LED 2" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.15">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/LED_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#FFAA00"
+            android:text="LED 3" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/LED_4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#C9FF7700"
+            android:text="LED 4" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.15">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/LED_5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#FFAA00"
+            android:text="LED 5" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/LED_6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="0.15"
+            android:backgroundTint="#C9FF7700"
+            android:text="LED 6" />
+
+    </TableRow>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/connect"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:text="start auto connection" />
 
 </LinearLayout>

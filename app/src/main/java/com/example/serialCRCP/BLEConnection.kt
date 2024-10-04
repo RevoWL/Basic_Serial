@@ -34,12 +34,9 @@ class BLEConnection {
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private lateinit var BLEscanCallback: ScanCallback
-    private var scanning = false
-    private val handler = Handler()
-    private val SCAN_PERIOD: Long = 3000
+
     var bleScanListener: DeviceScanListener? = null
     var BLEGatt: BluetoothGatt? = null
-    var manualDisconnect: Boolean = false
 
     fun init_BLE(context: Context) {
         bluetoothManager = context.getSystemService(Service.BLUETOOTH_SERVICE) as BluetoothManager
@@ -52,9 +49,6 @@ class BLEConnection {
     }
 
     interface DeviceScanListener {
-        fun onScanResultsAvailable(
-            scanResult: ScanResult?
-        )
 
         fun onBLEConnected(
             connected: Boolean
@@ -66,10 +60,9 @@ class BLEConnection {
     }
 
     @SuppressLint("MissingPermission")
-    fun scanLeDevice() {
+    fun scanLeDevice(ctx : Context) {
 
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
-        val bleDeviceListAdapter = bleDeviceListAdapter()
 
         BLEscanCallback = object : ScanCallback() {
             override fun onBatchScanResults(results: MutableList<ScanResult>?) {
@@ -83,23 +76,18 @@ class BLEConnection {
 
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
-                bleScanListener?.onScanResultsAvailable(result)
+                if (result?.scanRecord?.serviceUuids.toString().contains("4fafc201")
+                ) {
+                    bluetoothLeScanner.stopScan(BLEscanCallback)
+                    connectBLE(ctx, result?.device)
+                } else {
+                    return
+                }
             }
         }
 
-        if (!scanning) { // Stops scanning after a pre-defined scan period.
-            handler.postDelayed({
-                scanning = false
-                bluetoothLeScanner.stopScan(BLEscanCallback)
-            }, SCAN_PERIOD)
+        bluetoothLeScanner.startScan(BLEscanCallback)
 
-            scanning = true
-            bluetoothLeScanner.startScan(BLEscanCallback)
-
-        } else {
-            scanning = false
-            bluetoothLeScanner.stopScan(BLEscanCallback)
-        }
     }
 
     @SuppressLint("MissingPermission")
@@ -109,56 +97,17 @@ class BLEConnection {
 
             override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
                 super.onConnectionStateChange(gatt, status, newState)
-                println(status == BluetoothGatt.GATT_SUCCESS)
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
                     bleScanListener?.onBLEConnected(true)
                     gatt?.discoverServices()
-                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    if (!manualDisconnect) {
-                        BLEGatt?.connect()
-                    }
+                } else {
+                    scanLeDevice(ctx)
                     bleScanListener?.onBLEConnected(false)
                 }
             }
 
             override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
                 super.onServicesDiscovered(gatt, status)
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    val services = gatt?.services
-
-                    services?.forEach { service ->
-                        println(service)
-                        // Log the UUID of the service
-                        println("Service UUID: ${service.uuid}")
-
-                        // Get the list of characteristics for this service
-                        val characteristics = service.characteristics
-
-                        characteristics.forEach { characteristic ->
-                            // Log the UUID of the characteristic
-                            println("    Characteristic UUID: ${characteristic.uuid}")
-
-                            // Optionally, log the properties of the characteristic
-                            val properties = characteristic.properties
-                            if ((properties and BluetoothGattCharacteristic.PROPERTY_READ) != 0) {
-                                println("        Property: READ")
-                            }
-                            if ((properties and BluetoothGattCharacteristic.PROPERTY_WRITE) != 0) {
-                                println("        Property: WRITE")
-                            }
-                            if ((properties and BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
-                                println("        Property: NOTIFY")
-                                    // Enable notifications on this characteristic
-                                    gatt.setCharacteristicNotification(characteristic, true)
-
-                                    // Enable notifications on the BLE server by writing to the descriptor
-                                    val descriptor = characteristic.descriptors.get(0)
-                                    descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                                    gatt.writeDescriptor(descriptor)
-                            }
-                        }
-                    }
-                }
             }
 
             override fun onServiceChanged(gatt: BluetoothGatt) {

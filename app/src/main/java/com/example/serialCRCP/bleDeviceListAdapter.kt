@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.serialCRCP.databinding.DeviceCardBinding
 
+@Deprecated("Not longer using it for this version")
 class bleDeviceListAdapter : RecyclerView.Adapter<bleDeviceListAdapter.ViewHolder>() {
 
 
@@ -50,8 +51,7 @@ class bleDeviceListAdapter : RecyclerView.Adapter<bleDeviceListAdapter.ViewHolde
         } else {
             deviceSet.add(device?.device)
         }
-        if (device?.scanRecord?.deviceName.equals("ESP32")
-            || device?.scanRecord?.serviceUuids.toString().contains("4fafc201")
+        if (device?.scanRecord?.serviceUuids.toString().contains("4fafc201")
         ) {
             println(device)
             bleDeviceList.add(device?.device)
