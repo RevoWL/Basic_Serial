@@ -2,14 +2,21 @@ package com.example.serialCRCP
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
+import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
+import android.bluetooth.le.ScanResult
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.serialCRCP.databinding.ActivityMainBinding
 import java.util.UUID
 
@@ -25,12 +32,17 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.BLUETOOTH_CONNECT
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.CAMERA,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE
         )
     } else {
         arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
         )
     }
 
@@ -81,6 +93,50 @@ class MainActivity : AppCompatActivity() {
                     if (connected) {
                         Toast.makeText(this@MainActivity, "Connected to BLE", Toast.LENGTH_SHORT)
                             .show()
+
+                        try {
+                            val characteristic = BLEinstance.BLEGatt!!.getService(
+                                UUID.fromString(
+                                    "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+                                )
+                            )
+                                .getCharacteristic(UUID.fromString("beb5483e-36e1-4688-b7f5-ea07361b26a8"))
+                            if (BLEinstance.BLEGatt!!.setCharacteristicNotification(
+                                    characteristic,
+                                    true
+                                )
+                            ) {
+                                for (descriptor in characteristic.descriptors) {
+
+                                    if (VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                                        descriptor.value =
+                                            BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                                        BLEinstance.BLEGatt!!.writeDescriptor(descriptor)
+
+                                    } else {
+                                        BLEinstance.BLEGatt?.writeDescriptor(
+                                            descriptor,
+                                            BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                                        )
+                                    }
+                                }
+                                binding.notiTxt.text = "Notify enabled waiting for notification"
+                            } else {
+                                binding.notiTxt.text = "Notification channel not found"
+
+                            }
+                        } catch (e: NullPointerException) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "No characteristic found",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+//                        val intent =
+//                            Intent(this@MainActivity, AnteriorEyeRecordingActivity::class.java)
+//                        this@MainActivity.startActivity(intent)
+
                     } else {
                         Toast.makeText(
                             this@MainActivity,
@@ -92,10 +148,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            override fun onCharNotification(value: String) {
+                binding.notiTxt.text = value
+            }
+
         })
 
-        binding.connect.setOnClickListener{
-            BLEinstance.scanLeDevice(this@MainActivity)
+        binding.connect.setOnClickListener {
+            if (BLEinstance.BLEGatt == null) {
+                BLEinstance.scanLeDevice(this@MainActivity)
+            } else {
+                BLEinstance.bleScanListener?.onBLEConnected(true)
+            }
         }
 
 

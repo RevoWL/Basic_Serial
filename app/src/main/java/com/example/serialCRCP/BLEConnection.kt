@@ -53,6 +53,10 @@ class BLEConnection {
         fun onBLEConnected(
             connected: Boolean
         )
+
+        fun onCharNotification(
+            value: String
+        )
     }
 
     fun setDeviceScanListener(listener: DeviceScanListener) {
@@ -60,7 +64,7 @@ class BLEConnection {
     }
 
     @SuppressLint("MissingPermission")
-    fun scanLeDevice(ctx : Context) {
+    fun scanLeDevice(ctx: Context) {
 
         bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
 
@@ -76,8 +80,7 @@ class BLEConnection {
 
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
-                if (result?.scanRecord?.serviceUuids.toString().contains("4fafc201")
-                ) {
+                if (result?.scanRecord?.serviceUuids.toString().contains("4fafc201")) {
                     bluetoothLeScanner.stopScan(BLEscanCallback)
                     connectBLE(ctx, result?.device)
                 } else {
@@ -98,7 +101,6 @@ class BLEConnection {
             override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
                 super.onConnectionStateChange(gatt, status, newState)
                 if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
-                    bleScanListener?.onBLEConnected(true)
                     gatt?.discoverServices()
                 } else {
                     scanLeDevice(ctx)
@@ -108,6 +110,7 @@ class BLEConnection {
 
             override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
                 super.onServicesDiscovered(gatt, status)
+                bleScanListener?.onBLEConnected(true)
             }
 
             override fun onServiceChanged(gatt: BluetoothGatt) {
@@ -135,9 +138,7 @@ class BLEConnection {
             }
 
             override fun onDescriptorWrite(
-                gatt: BluetoothGatt?,
-                descriptor: BluetoothGattDescriptor?,
-                status: Int
+                gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int
             ) {
                 super.onDescriptorWrite(gatt, descriptor, status)
             }
@@ -152,9 +153,7 @@ class BLEConnection {
             }
 
             override fun onCharacteristicWrite(
-                gatt: BluetoothGatt?,
-                characteristic: BluetoothGattCharacteristic?,
-                status: Int
+                gatt: BluetoothGatt?, characteristic: BluetoothGattCharacteristic?, status: Int
             ) {
                 super.onCharacteristicWrite(gatt, characteristic, status)
             }
@@ -169,13 +168,27 @@ class BLEConnection {
             }
 
             override fun onCharacteristicChanged(
-                gatt: BluetoothGatt,
-                characteristic: BluetoothGattCharacteristic,
-                value: ByteArray
+                gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, value: ByteArray
             ) {
                 super.onCharacteristicChanged(gatt, characteristic, value)
+                bleScanListener?.onCharNotification(value.decodeToString())
+                println(
+                    value.decodeToString()
+                )
+            }
 
-                println(value.decodeToString())
+            override fun onCharacteristicChanged(
+                gatt: BluetoothGatt?,
+                characteristic: BluetoothGattCharacteristic?
+            ) {
+                super.onCharacteristicChanged(gatt, characteristic)
+                if (characteristic != null) {
+                    bleScanListener?.onCharNotification(characteristic.value.decodeToString())
+                    println(
+                        characteristic.value.decodeToString()
+                    )
+                }
+
             }
 
 
